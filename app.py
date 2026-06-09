@@ -132,19 +132,66 @@ with res_col2:
 st.caption("Iva e cassa escluse.")
 st.caption("Il calcolo non include eventuali spese di trasferta con partenza da Noventa Vicentina se distanza superiore a 100km.")
 
-# --- SEZIONE RICHIESTA SOPRALLUOGO (INVIO DIRETTO AUTOMATICO) ---
+# --- SEZIONE RICHIESTA SOPRALLUOGO (CON CALENDARIO E CAPTCHA) ---
 st.divider()
 st.subheader("📍 Richiedi un Sopralluogo")
-st.write("Inserisci i dati dell'immobile e i tuoi recapiti per inviarci la richiesta direttamente.")
+st.write("Scegli una data, inserisci i dati dell'immobile e lasciaci i tuoi recapiti.")
 
-# Campi di input per raccogliere i dati del cliente
-indirizzo = st.text_input("Indirizzo esatto dell'immobile da rilevare (Via, Civico, CAP, Città, Provincia):")
-nome_cliente = st.text_input("Il tuo Nome e Cognome:")
+import random
+import datetime
+
+# --- 1. SISTEMA DI PRENOTAZIONE (CALENDARIO AVANZATO) ---
+st.markdown("#### 📅 Scegli Data e Ora")
+
+# Il nuovo sistema usa un dizionario per definire l'occupazione: "Tutto il giorno", "Mattina", o "Pomeriggio"
+date_occupate = {
+    datetime.date(2026, 6, 15): "Mattina",
+    datetime.date(2026, 6, 20): "Pomeriggio",
+    # Giornate bloccate interamente per le vacanze a Canazei di fine giugno
+    datetime.date(2026, 6, 26): "Tutto il giorno",
+    datetime.date(2026, 6, 27): "Tutto il giorno",
+    datetime.date(2026, 6, 28): "Tutto il giorno",
+    datetime.date(2026, 6, 29): "Tutto il giorno"
+}
+
+col_data, col_ora = st.columns(2)
+
+with col_data:
+    data_scelta = st.date_input("Giorno del sopralluogo:", min_value=datetime.date.today(), format="DD/MM/YYYY")
+    
+with col_ora:
+    fascia_oraria = st.selectbox("Fascia oraria:", ["Mattina (09:00 - 12:00)", "Pomeriggio (15:00 - 18:00)"])
+
+# Controllo disponibilità incrociando data e fascia oraria
+data_disponibile = True
+
+if data_scelta in date_occupate:
+    stato_occupazione = date_occupate[data_scelta]
+    
+    if stato_occupazione == "Tutto il giorno":
+        st.error("❌ Data completamente occupata. Seleziona un altro giorno.")
+        data_disponibile = False
+    elif stato_occupazione == "Mattina" and "Mattina" in fascia_oraria:
+        st.error("❌ La mattina di questo giorno è già impegnata. Scegli il pomeriggio o un'altra data.")
+        data_disponibile = False
+    elif stato_occupazione == "Pomeriggio" and "Pomeriggio" in fascia_oraria:
+        st.error("❌ Il pomeriggio di questo giorno è già impegnato. Scegli la mattina o un'altra data.")
+        data_disponibile = False
+    else:
+        # Se è occupata la mattina ma l'utente sceglie il pomeriggio (o viceversa)
+        st.success("✅ Orario disponibile per questa data!")
+elif data_scelta.weekday() >= 5: 
+    st.warning("⚠️ Hai selezionato un weekend. La disponibilità dovrà essere confermata.")
+else:
+    st.success("✅ Data e orario disponibili!")
+
+# --- 2. DATI CLIENTE ---
+st.markdown("#### 👤 I tuoi dati")
+indirizzo = st.text_input("Indirizzo esatto dell'immobile da rilevare (Via, Civico, Città):")
+nome_cliente = st.text_input("Il tuo Nome o Ragione Sociale:")
 contatto_cliente = st.text_input("Il tuo Telefono o Email per essere ricontattato:")
 
-# --- INIZIO BLOCCO CAPTCHA ---
-import random
-
+# --- 3. CAPTCHA ANTI-ROBOT ---
 if 'captcha_a' not in st.session_state:
     st.session_state.captcha_a = random.randint(1, 9)
     st.session_state.captcha_b = random.randint(1, 9)
@@ -152,13 +199,11 @@ if 'captcha_a' not in st.session_state:
 st.write(f"🤖 **Controllo Anti-Spam: quanto fa {st.session_state.captcha_a} + {st.session_state.captcha_b}?**")
 risposta_captcha = st.text_input("Inserisci il risultato numerico per sbloccare l'invio:")
 somma_corretta = str(st.session_state.captcha_a + st.session_state.captcha_b)
-# --- FINE BLOCCO CAPTCHA ---
 
-# Il pulsante appare solo se l'utente ha compilato tutti e 3 i campi
-if indirizzo and nome_cliente and contatto_cliente and risposta_captcha == somma_corretta:
+# --- 4. MOTORE DI INVIO EMAIL ---
+if indirizzo and nome_cliente and contatto_cliente and risposta_captcha == somma_corretta and data_disponibile:
     if st.button("✉️ Invia Richiesta Sopralluogo", type="primary"):
         
-        # Testo dell'email
         oggetto = f"Nuova Richiesta Sopralluogo - {nome_cliente}"
         corpo_email = f"""È stata generata una nuova richiesta di sopralluogo dal calcolatore web.
 
@@ -166,7 +211,9 @@ DATI CLIENTE:
 - Nome/Azienda: {nome_cliente}
 - Recapito: {contatto_cliente}
 
-IMMOBILE:
+APPUNTAMENTO RICHIESTO:
+- Data: {data_scelta.strftime('%d/%m/%Y')}
+- Orario: {fascia_oraria}
 - Indirizzo: {indirizzo}
 
 RIEPILOGO PARAMETRI:
@@ -177,7 +224,6 @@ RIEPILOGO PARAMETRI:
 - STIMA PREZZO: {preventivo_totale:,.2f} Euro
 - TEMPI STIMATI: {giorni_stimati} giorni
 """
-        # --- MOTORE DI INVIO EMAIL (SMTP) ---
         try:
             import smtplib
             from email.mime.text import MIMEText
@@ -187,18 +233,21 @@ RIEPILOGO PARAMETRI:
             msg['From'] = "studioandriolo@gmail.com"
             msg['To'] = "studioandriolo@gmail.com"
 
-            # Connessione al server sicuro di Google
             server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
-            # Usa la password segreta nascosta su Streamlit
             server.login("studioandriolo@gmail.com", st.secrets["GMAIL_PASSWORD"])
             server.send_message(msg)
             server.quit()
 
-            st.success("✅ Richiesta inviata con successo! Ti ricontatteremo al più presto.")
-            # Rimescola i numeri del captcha
+            st.success("✅ Richiesta inviata con successo! Ti ricontatteremo al più presto per confermare l'appuntamento.")
+            
             st.session_state.captcha_a = random.randint(1, 9)
             st.session_state.captcha_b = random.randint(1, 9)
+            
         except Exception as e:
-            st.error("⚠️ Si è verificato un errore nell'invio. Verifica che la password nei Secrets di Streamlit sia corretta.")
+            st.error("⚠️ Si è verificato un errore nell'invio. Riprova più tardi.")
+elif risposta_captcha != "" and risposta_captcha != somma_corretta:
+    st.error("❌ Risultato matematico errato. Riprova.")
+elif not data_disponibile:
+    pass 
 else:
-    st.info("👆 Compila tutti i campi qui sopra per abilitare il pulsante di invio.")
+    st.info("👆 Scegli una data disponibile, compila tutti i dati e risolvi il calcolo per inviare la richiesta.")
