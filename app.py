@@ -119,17 +119,59 @@ matrice_tempi = {
 giorni_base = matrice_tempi[servizio][spazi]
 giorni_stimati = int((giorni_base * molt_superficie_tempo) + 0.99)
 
+# --- CALCOLO FINALE PREVENTIVO ---
+totale_moltiplicatori_complessita = molt_spazi * molt_luoghi * molt_geom
+
+# Calcolo Imponibile (Prezzo Base * Moltiplicatore Servizio * Moltiplicatori Complessità)
+imponibile = prezzo_base * molt_servizio * totale_moltiplicatori_complessita
+
+# Calcolo Tasse e Prezzo Finito
+cassa = imponibile * 0.04  # Cassa al 4%
+subtotale = imponibile + cassa
+iva = subtotale * 0.22     # Iva al 22% calcolata su Imponibile + Cassa
+prezzo_finito = subtotale + iva
+
+# --- MOTORE CALCOLO TEMPI DI CONSEGNA ---
+# Calcolo moltiplicatore tempo in base alla superficie
+if superficie <= 499:
+    molt_superficie_tempo = 1.0
+elif superficie <= 999:
+    molt_superficie_tempo = 1.5
+elif superficie <= 2999:
+    molt_superficie_tempo = 2.0
+elif superficie <= 4999:
+    molt_superficie_tempo = 2.5
+else:
+    molt_superficie_tempo = 3.0
+
+matrice_tempi = {
+    "SMART (Rilievo, elaborazione nuvola di punti)": {"Open Space": 3, "Standard": 3, "Frammentato": 3},
+    "TECNICO (Smart + planimetrie CAD 2D di alta precisione)": {"Open Space": 5, "Standard": 7, "Frammentato": 7},
+    "BIM (Smart + modellazione parametrica intelligente)": {"Open Space": 5, "Standard": 10, "Frammentato": 15},
+    "VISUAL (Smart + Virtual Tour 360° immersivo)": {"Open Space": 5, "Standard": 5, "Frammentato": 5},
+    "TECNICO + VISUAL": {"Open Space": 7, "Standard": 9, "Frammentato": 9},
+    "BIM + VISUAL": {"Open Space": 8, "Standard": 13, "Frammentato": 18}
+}
+
+giorni_base = matrice_tempi[servizio][spazi]
+giorni_stimati = int((giorni_base * molt_superficie_tempo) + 0.99)
+
+st.divider()
+
 # --- BOX RISULTATI IMPAGINATO ---
 res_col1, res_col2 = st.columns(2)
+
 with res_col1:
-    st.subheader("💶 PREVENTIVO STIMATO")
-    st.markdown(f"### **{preventivo_totale:,.2f} €**")
+    st.subheader("💶 PREVENTIVO FINITO")
+    st.markdown(f"### **{prezzo_finito:,.2f} €**")
+    # Aggiungo una riga in piccolo per mostrare la composizione del prezzo
+    st.caption(f"Imponibile: {imponibile:,.2f} € | Cassa (4%): {cassa:,.2f} € | IVA (22%): {iva:,.2f} €")
     
 with res_col2:
     st.subheader("⏳ TEMPI DI CONSEGNA")
     st.markdown(f"### **{giorni_stimati} giorni**")
-    
-st.caption("Iva e cassa escluse.")
+
+# Nota
 st.caption("Il calcolo non include eventuali spese di trasferta con partenza da Noventa Vicentina se distanza superiore a 100km.")
 
 # --- SEZIONE RICHIESTA SOPRALLUOGO (CON CALENDARIO E CAPTCHA) ---
