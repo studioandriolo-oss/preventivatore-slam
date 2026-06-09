@@ -164,13 +164,13 @@ res_col1, res_col2 = st.columns(2)
 with res_col1:
     st.subheader("💶 PREVENTIVO FINITO")
     st.markdown(f"### **{prezzo_finito:,.2f} €**")
-    # Aggiungo una riga in piccolo per mostrare la composizione del prezzo
-    st.caption(f"Imponibile: {imponibile:,.2f} € | Cassa (4%): {cassa:,.2f} € | IVA (22%): {iva:,.2f} €")
     
 with res_col2:
     st.subheader("⏳ TEMPI DI CONSEGNA")
     st.markdown(f"### **{giorni_stimati} giorni**")
 
+# Aggiungo una riga in piccolo per mostrare la composizione del prezzo
+st.caption(f"Imponibile: {imponibile:,.2f} € | Cassa (4%): {cassa:,.2f} € | IVA (22%): {iva:,.2f} €")
 # Nota
 st.caption("Il calcolo non include eventuali spese di trasferta con partenza da Noventa Vicentina se distanza superiore a 100km.")
 
