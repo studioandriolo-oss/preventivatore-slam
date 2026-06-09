@@ -132,44 +132,58 @@ with res_col2:
 st.caption("Iva e cassa escluse.")
 st.caption("Il calcolo non include eventuali spese di trasferta con partenza da Noventa Vicentina se distanza superiore a 100km.")
 
-
-# --- SEZIONE RICHIESTA SOPRALLUOGO (INVIO EMAIL) ---
+# --- SEZIONE RICHIESTA SOPRALLUOGO (INVIO DIRETTO AUTOMATICO) ---
 st.divider()
 st.subheader("📍 Richiedi un Sopralluogo")
-st.write("Inserisci l'indirizzo dell'immobile e inviaci i dati calcolati per fissare un sopralluogo.")
+st.write("Inserisci i dati dell'immobile e i tuoi recapiti per inviarci la richiesta direttamente.")
 
-# Campo per inserire l'indirizzo
+# Campi di input per raccogliere i dati del cliente
 indirizzo = st.text_input("Indirizzo esatto dell'immobile da rilevare (Via, Civico, Città):")
+nome_cliente = st.text_input("Il tuo Nome o Ragione Sociale:")
+contatto_cliente = st.text_input("Il tuo Telefono o Email per essere ricontattato:")
 
-# Il pulsante appare solo se l'utente ha scritto un indirizzo
-if indirizzo:
-    # Costruiamo il testo dell'email
-    oggetto = f"Richiesta Sopralluogo Rilievo 3D - {indirizzo}"
-    corpo_email = f"""Buongiorno,
-desidero richiedere un sopralluogo per un rilievo architettonico.
+# Il pulsante appare solo se l'utente ha compilato tutti e 3 i campi
+if indirizzo and nome_cliente and contatto_cliente:
+    if st.button("✉️ Invia Richiesta Sopralluogo", type="primary"):
+        
+        # Testo dell'email
+        oggetto = f"Nuova Richiesta Sopralluogo - {nome_cliente}"
+        corpo_email = f"""È stata generata una nuova richiesta di sopralluogo dal calcolatore web.
 
-L'immobile si trova in: {indirizzo}
+DATI CLIENTE:
+- Nome/Azienda: {nome_cliente}
+- Recapito: {contatto_cliente}
 
-Di seguito il riepilogo dei parametri inseriti nel calcolatore:
+IMMOBILE:
+- Indirizzo: {indirizzo}
+
+RIEPILOGO PARAMETRI:
 - Superficie: {superficie} mq
 - Tipologia Servizio: {servizio}
-- Complessita': Spazi {spazi}, Luoghi {luoghi}, Geometria {geometria}
+- Complessità: Spazi {spazi}, Luoghi {luoghi}, Geometria {geometria}
 
-- PREVENTIVO STIMATO: {preventivo_totale:,.2f} Euro
+- STIMA PREZZO: {preventivo_totale:,.2f} Euro
 - TEMPI STIMATI: {giorni_stimati} giorni
-
-In attesa di un vostro riscontro per definire i dettagli, porgo cordiali saluti.
 """
-    
-    # Importiamo la libreria per trasformare il testo in formato "Link" 
-    import urllib.parse
-    corpo_codificato = urllib.parse.quote(corpo_email)
-    oggetto_codificato = urllib.parse.quote(oggetto)
-    
-    # Creiamo il link che fa aprire il programma di posta
-    link_mail = f"mailto:studioandriolo@gmail.com?subject={oggetto_codificato}&body={corpo_codificato}"
-    
-    # Pulsante per inviare
-    st.link_button("✉️ Invia Richiesta Sopralluogo", link_mail, use_container_width=True)
+        # --- MOTORE DI INVIO EMAIL (SMTP) ---
+        try:
+            import smtplib
+            from email.mime.text import MIMEText
+
+            msg = MIMEText(corpo_email)
+            msg['Subject'] = oggetto
+            msg['From'] = "studioandriolo@gmail.com"
+            msg['To'] = "studioandriolo@gmail.com"
+
+            # Connessione al server sicuro di Google
+            server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
+            # Usa la password segreta nascosta su Streamlit
+            server.login("studioandriolo@gmail.com", st.secrets["GMAIL_PASSWORD"])
+            server.send_message(msg)
+            server.quit()
+
+            st.success("✅ Richiesta inviata con successo! Ti ricontatteremo al più presto.")
+        except Exception as e:
+            st.error("⚠️ Si è verificato un errore nell'invio. Verifica che la password nei Secrets di Streamlit sia corretta.")
 else:
-    st.info("👆 Inserisci l'indirizzo qui sopra per abilitare il pulsante di invio email.")
+    st.info("👆 Compila tutti i campi qui sopra per abilitare il pulsante di invio.")
