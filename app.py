@@ -132,7 +132,15 @@ with res_col2:
 st.caption("Iva e cassa escluse.")
 st.caption("Il calcolo non include eventuali spese di trasferta con partenza da Noventa Vicentina se distanza superiore a 100km.")
 
-#--- 1. SISTEMA DI PRENOTAZIONE (CALENDARIO AVANZATO) ---
+# --- SEZIONE RICHIESTA SOPRALLUOGO (CON CALENDARIO E CAPTCHA) ---
+st.divider()
+st.subheader("📍 Richiedi un Sopralluogo")
+st.write("Scegli una data, inserisci i dati dell'immobile e lasciaci i tuoi recapiti.")
+
+import random
+import datetime
+
+# --- 1. SISTEMA DI PRENOTAZIONE (CALENDARIO AVANZATO) ---
 st.markdown("#### 📅 Scegli Data e Ora")
 
 # Il nuovo sistema usa un dizionario per definire l'occupazione: "Tutto il giorno", "Mattina", o "Pomeriggio"
@@ -147,11 +155,13 @@ date_occupate = {
 }
 
 col_data, col_ora = st.columns(2)
+
 with col_data:
-    data_scelta = st.date_input("Giorno del sopralluogo:", min_value=datetime.date.today(), format="DD/MM/YYYY")    
-with col_ora:
-   fascia_oraria = st.selectbox("Fascia oraria:", ["Mattina (09:00 - 12:00)", "Pomeriggio (15:00 - 18:00)"])
+    data_scelta = st.date_input("Giorno del sopralluogo:", min_value=datetime.date.today(), format="DD/MM/YYYY")
     
+with col_ora:
+    fascia_oraria = st.selectbox("Fascia oraria:", ["Mattina (09:00 - 12:00)", "Pomeriggio (15:00 - 18:00)"])
+
 # Controllo disponibilità incrociando data e fascia oraria
 data_disponibile = True
 
