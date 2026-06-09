@@ -1,13 +1,16 @@
 import streamlit as st
 
 # Impostazioni grafiche della pagina
-st.set_page_config(page_title="Preventivatore SLAM", page_icon="📐", layout="centered")
+st.set_page_config(page_title="Preventivatore SLAM", page_icon="logo.png", layout="centered")
 
 # --- SEZIONE LOGO ---
-st.image("logo.png", width=150)
-st.title("Calcolatore Rilievi 3D SLAM")
-st.write("Generatore rapido di preventivi per rilievi architettonici.")
-st.divider()
+col1, col2, col3 = st.columns([1, 1, 1])
+
+with col2
+    st.image("logo.png", width=150)
+    st.title("Calcolatore Rilievi 3D di Gianfranco Andriolo")
+    st.write("Generatore rapido di preventivi per rilievi architettonici con tecnologia SLAM.")
+    st.divider()
 
 # SEZIONE 1: Superficie e Prezzo Base
 st.subheader("1. Dimensioni Immobile")
