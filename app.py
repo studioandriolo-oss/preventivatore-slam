@@ -15,17 +15,17 @@ superficie = st.number_input("Inserisci la Superficie (mq)", min_value=1, value=
 if superficie <= 99:
     prezzo_base = 200
 elif superficie <= 499:
-    prezzo_base = 318
+    prezzo_base = 298
 elif superficie <= 999:
-    prezzo_base = 790
+    prezzo_base = 690
 elif superficie <= 2999:
-    prezzo_base = 1380
+    prezzo_base = 1180
 elif superficie <= 4999:
-    prezzo_base = 3740
+    prezzo_base = 3140
 elif superficie <= 9999:
-    prezzo_base = 6100
+    prezzo_base = 5100
 else:
-    prezzo_base = 12000
+    prezzo_base = 10000
 
 st.info(f"Quota Base per {superficie} mq: **{prezzo_base} €**")
 
@@ -76,4 +76,4 @@ preventivo_totale = prezzo_base * molt_servizio * totale_moltiplicatori_compless
 st.divider()
 st.subheader("💶 PREVENTIVO STIMATO:")
 st.markdown(f"### **{preventivo_totale:,.2f} €**")
-st.caption("Iva e cassa escluse. Il calcolo non include eventuali spese di trasferta con partenza dalla sede di Padova.")
+st.caption("Iva e cassa escluse. Il calcolo non include eventuali spese di trasferta con partenza da Noventa Vicentina se distanza superiore a 100km.")
