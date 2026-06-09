@@ -5,7 +5,7 @@ st.set_page_config(page_title="Preventivatore SLAM", page_icon="📐", layout="c
 
 # --- SEZIONE LOGO ---
 st.image("logo.png", width=150)
-st.title("📐 Calcolatore Rilievi 3D SLAM")
+st.title("Calcolatore Rilievi 3D SLAM")
 st.write("Generatore rapido di preventivi per rilievi architettonici.")
 st.divider()
 
