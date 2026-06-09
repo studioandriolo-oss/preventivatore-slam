@@ -184,6 +184,9 @@ elif data_scelta.weekday() >= 5:
     st.warning("⚠️ Hai selezionato un weekend. La disponibilità dovrà essere confermata.")
 else:
     st.success("✅ Data e orario disponibili!")
+    
+st.caption("Data e orario saranno confermate dopo l'invio della richiesta.")
+
 
 # --- 2. DATI CLIENTE ---
 st.markdown("#### 👤 I tuoi dati")
