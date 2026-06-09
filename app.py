@@ -123,7 +123,6 @@ st.divider()
 
 # --- BOX RISULTATI IMPAGINATO ---
 res_col1, res_col2 = st.columns(2)
-
 with res_col1:
     st.subheader("💶 PREVENTIVO STIMATO")
     st.markdown(f"### **{preventivo_totale:,.2f} €**")
