@@ -1,0 +1,54 @@
+import streamlit as st
+
+# Impostazioni grafiche della pagina
+st.set_page_config(page_title="Preventivatore SLAM", page_icon="📐", layout="centered")
+
+st.title("📐 Calcolatore Rilievi 3D SLAM")
+st.write("Generatore rapido di preventivi per rilievi architettonici.")
+st.divider()
+
+# SEZIONE 1: Superficie e Prezzo Base
+st.subheader("1. Dimensioni Immobile")
+superficie = st.number_input("Inserisci la Superficie (mq)", min_value=1, value=150, step=10)
+
+# Motore di calcolo scaglioni
+if superficie <= 99:
+    prezzo_base = 200
+elif superficie <= 499:
+    prezzo_base = 318
+elif superficie <= 999:
+    prezzo_base = 790
+elif superficie <= 2999:
+    prezzo_base = 1380
+elif superficie <= 4999:
+    prezzo_base = 3740
+elif superficie <= 9999:
+    prezzo_base = 6100
+else:
+    prezzo_base = 12000
+
+st.info(f"Quota Base identificata per {superficie} mq: **{prezzo_base} €**")
+
+# SEZIONE 2: Coefficienti di Difficoltà
+st.subheader("2. Complessità del Rilievo")
+col1, col2, col3 = st.columns(3)
+
+with col1:
+    spazi = st.selectbox("Tipologia Spazi", ["Open Space", "Standard", "Frammentato"])
+    molt_spazi = 1.0 if spazi == "Open Space" else (1.15 if spazi == "Standard" else 1.3)
+
+with col2:
+    luoghi = st.selectbox("Tipologia Luoghi", ["Al Grezzo", "Arredato", "Ingombrato/Riflessi"])
+    molt_luoghi = 1.0 if luoghi == "Al Grezzo" else (1.1 if luoghi == "Arredato" else 1.25)
+
+with col3:
+    geometria = st.selectbox("Geometria", ["Ortogonale", "Storico / Irregolare"])
+    molt_geom = 1.0 if geometria == "Ortogonale" else 1.4
+
+# CALCOLO FINALE
+totale_moltiplicatori = molt_spazi * molt_luoghi * molt_geom
+prezzo_calcolato = prezzo_base * totale_moltiplicatori
+
+st.divider()
+st.subheader(f"💶 PREVENTIVO STIMATO: {prezzo_calcolato:,.2f} €")
+st.caption("Iva e cassa escluse. Il calcolo non include eventuali spese di trasferta
