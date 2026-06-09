@@ -143,22 +143,30 @@ import datetime
 # --- 1. SISTEMA DI PRENOTAZIONE (CALENDARIO AVANZATO) ---
 st.markdown("#### 📅 Scegli Data e Ora")
 
-# Il nuovo sistema usa un dizionario per definire l'occupazione: "Tutto il giorno", "Mattina", o "Pomeriggio"
+# Il dizionario per definire l'occupazione: "Tutto il giorno", "Mattina", o "Pomeriggio"
 date_occupate = {
     datetime.date(2026, 6, 15): "Mattina",
     datetime.date(2026, 6, 20): "Pomeriggio",
-    # Giornate bloccate interamente per le vacanze a Canazei di fine giugno
     datetime.date(2026, 6, 26): "Tutto il giorno",
     datetime.date(2026, 6, 27): "Tutto il giorno",
     datetime.date(2026, 6, 28): "Tutto il giorno",
     datetime.date(2026, 6, 29): "Tutto il giorno"
 }
 
-col_data, col_ora = st.columns(2)
+# --- NUOVO: Mostriamo in automatico le date non disponibili all'utente ---
+date_formattate = []
+for data_bloccata, fascia in date_occupate.items():
+    # Filtriamo per mostrare solo gli impegni dal giorno odierno in poi
+    if data_bloccata >= datetime.date.today(): 
+        date_formattate.append(f"**{data_bloccata.strftime('%d/%m/%Y')}** ({fascia})")
 
+if date_formattate:
+    st.info("📌 **Date attualmente impegnate:**\n\n" + " • ".join(date_formattate))
+
+# Generazione campi di scelta
+col_data, col_ora = st.columns(2)
 with col_data:
     data_scelta = st.date_input("Giorno del sopralluogo:", min_value=datetime.date.today(), format="DD/MM/YYYY")
-    
 with col_ora:
     fascia_oraria = st.selectbox("Fascia oraria:", ["Mattina (09:00 - 12:00)", "Pomeriggio (15:00 - 18:00)"])
 
@@ -187,8 +195,8 @@ else:
 
 # --- 2. DATI CLIENTE ---
 st.markdown("#### 👤 I tuoi dati")
-indirizzo = st.text_input("Indirizzo esatto dell'immobile da rilevare (Via, Civico, Città):")
-nome_cliente = st.text_input("Il tuo Nome o Ragione Sociale:")
+indirizzo = st.text_input("Indirizzo esatto dell'immobile da rilevare (Via, Civico, CAP, Città, Provincia):")
+nome_cliente = st.text_input("Il tuo Nome e Cognome:")
 contatto_cliente = st.text_input("Il tuo Telefono o Email per essere ricontattato:")
 
 # --- 3. CAPTCHA ANTI-ROBOT ---
