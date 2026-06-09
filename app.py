@@ -13,17 +13,17 @@ superficie = st.number_input("Inserisci la Superficie (mq)", min_value=1, value=
 
 # Motore di calcolo scaglioni
 if superficie <= 99:
-    prezzo_base = 200
+    prezzo_base = 300
 elif superficie <= 499:
-    prezzo_base = 318
+    prezzo_base = 417
 elif superficie <= 999:
-    prezzo_base = 790
+    prezzo_base = 885
 elif superficie <= 2999:
-    prezzo_base = 1380
+    prezzo_base = 1470
 elif superficie <= 4999:
-    prezzo_base = 3740
+    prezzo_base = 3810
 elif superficie <= 9999:
-    prezzo_base = 6100
+    prezzo_base = 6150
 else:
     prezzo_base = 12000
 
