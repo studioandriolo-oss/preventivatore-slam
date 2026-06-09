@@ -131,3 +131,45 @@ with res_col2:
     
 st.caption("Iva e cassa escluse.")
 st.caption("Il calcolo non include eventuali spese di trasferta con partenza da Noventa Vicentina se distanza superiore a 100km.")
+
+
+# --- SEZIONE RICHIESTA SOPRALLUOGO (INVIO EMAIL) ---
+st.divider()
+st.subheader("📍 Richiedi un Sopralluogo")
+st.write("Inserisci l'indirizzo dell'immobile e inviaci i dati calcolati per fissare un sopralluogo.")
+
+# Campo per inserire l'indirizzo
+indirizzo = st.text_input("Indirizzo esatto dell'immobile da rilevare (Via, Civico, Città):")
+
+# Il pulsante appare solo se l'utente ha scritto un indirizzo
+if indirizzo:
+    # Costruiamo il testo dell'email
+    oggetto = f"Richiesta Sopralluogo Rilievo 3D - {indirizzo}"
+    corpo_email = f"""Buongiorno,
+desidero richiedere un sopralluogo per un rilievo architettonico.
+
+L'immobile si trova in: {indirizzo}
+
+Di seguito il riepilogo dei parametri inseriti nel calcolatore:
+- Superficie: {superficie} mq
+- Tipologia Servizio: {servizio}
+- Complessita': Spazi {spazi}, Luoghi {luoghi}, Geometria {geometria}
+
+- PREVENTIVO STIMATO: {preventivo_totale:,.2f} Euro
+- TEMPI STIMATI: {giorni_stimati} giorni
+
+In attesa di un vostro riscontro per definire i dettagli, porgo cordiali saluti.
+"""
+    
+    # Importiamo la libreria per trasformare il testo in formato "Link" 
+    import urllib.parse
+    corpo_codificato = urllib.parse.quote(corpo_email)
+    oggetto_codificato = urllib.parse.quote(oggetto)
+    
+    # Creiamo il link che fa aprire il programma di posta
+    link_mail = f"mailto:studioandriolo@gmail.com?subject={oggetto_codificato}&body={corpo_codificato}"
+    
+    # Pulsante per inviare
+    st.link_button("✉️ Invia Richiesta Sopralluogo", link_mail, use_container_width=True)
+else:
+    st.info("👆 Inserisci l'indirizzo qui sopra per abilitare il pulsante di invio email.")
