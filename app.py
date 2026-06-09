@@ -43,11 +43,11 @@ servizio = st.selectbox("Seleziona il livello di restituzione grafica", [
 # Assegnazione del moltiplicatore fisso per ogni servizio
 dati_servizi = {
     "SMART (Rilievo, elaborazione nuvola di punti)": 1.0,
-    "TECNICO (Smart + planimetrie CAD 2D di alta precisione)": 2.5,
-    "BIM (Smart + modellazione parametrica intelligente)": 6.0,
-    "VISUAL (Smart + Virtual Tour 360° immersivo)": 2.0,
-    "TECNICO + VISUAL": 3.5,
-    "BIM + VISUAL": 7.0
+    "TECNICO (Smart + planimetrie CAD 2D di alta precisione)": 2,
+    "BIM (Smart + modellazione parametrica intelligente)": 3,
+    "VISUAL (Smart + Virtual Tour 360° immersivo)": 1.5,
+    "TECNICO + VISUAL": 2.5,
+    "BIM + VISUAL": 3.5
 }
 molt_servizio = dati_servizi[servizio]
 
