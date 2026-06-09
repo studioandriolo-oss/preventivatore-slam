@@ -78,9 +78,9 @@ with col2:
     if luoghi == "Al Grezzo":
         st.image("grezzo.jpg", caption="Esempio stanza Al Grezzo")
     elif luoghi == "Arredato":
-        st.image("arredato.jpg", caption="Esempio Stanza Arredata")
+        st.image("arredato.JPG", caption="Esempio Stanza Arredata")
     else:
-        st.image("Ingombrato.jpg", caption="Esempio Stanza ingombrata")
+        st.image("ingombrato.JPG", caption="Esempio Stanza ingombrata")
 
 with col3:
     geometria = st.selectbox("Geometria", ["Ortogonale", "Storico / Irregolare"])
