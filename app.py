@@ -62,7 +62,7 @@ with col1:
     spazi = st.selectbox("Tipologia Spazi", ["Open Space", "Standard", "Frammentato"])
     molt_spazi = 1.0 if spazi == "Open Space" else (1.15 if spazi == "Standard" else 1.3)
 
-# --- IMMAGINE DINAMICA CHE CAMBIA ---
+# --- IMMAGINE DINAMICA CHE CAMBIA SPAZI ---
     if spazi == "Open Space":
         st.image("open.jpg", caption="Esempio Open Space")
     elif spazi == "Standard":
@@ -74,11 +74,19 @@ with col2:
     luoghi = st.selectbox("Tipologia Luoghi", ["Al Grezzo", "Arredato", "Ingombrato/Riflessi"])
     molt_luoghi = 1.0 if luoghi == "Al Grezzo" else (1.1 if luoghi == "Arredato" else 1.25)
 
+# --- IMMAGINE DINAMICA CHE CAMBIA LUOGHI ---
+    if luoghi == "Al Grezzo":
+        st.image("grezzo.jpg", caption="Esempio stanza Al Grezzo")
+    elif luoghi == "Arredato":
+        st.image("arredato.jpg", caption="Esempio Stanza Arredata")
+    else:
+        st.image("Ingombrato.jpg", caption="Esempio Stanza ingombrata")
+
 with col3:
     geometria = st.selectbox("Geometria", ["Ortogonale", "Storico / Irregolare"])
     molt_geom = 1.0 if geometria == "Ortogonale" else 1.4
 
-# --- IMMAGINE DINAMICA CHE CAMBIA 2 ---
+# --- IMMAGINE DINAMICA CHE CAMBIA GEOMETRIA ---
     if geometria == "Ortogonale":
         st.image("ortogonale.jpg", caption="Esempio edificio ortogonale")
     else:
