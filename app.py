@@ -3,6 +3,8 @@ import streamlit as st
 # Impostazioni grafiche della pagina
 st.set_page_config(page_title="Preventivatore SLAM", page_icon="📐", layout="centered")
 
+# --- SEZIONE LOGO ---
+st.image("logo.png", width=150)
 st.title("📐 Calcolatore Rilievi 3D SLAM")
 st.write("Generatore rapido di preventivi per rilievi architettonici.")
 st.divider()
@@ -58,6 +60,14 @@ col1, col2, col3 = st.columns(3)
 with col1:
     spazi = st.selectbox("Tipologia Spazi", ["Open Space", "Standard", "Frammentato"])
     molt_spazi = 1.0 if spazi == "Open Space" else (1.15 if spazi == "Standard" else 1.3)
+
+# --- IMMAGINE DINAMICA CHE CAMBIA ---
+    if spazi == "Open Space":
+        st.image("open.jpg", caption="Esempio Open Space")
+    elif spazi == "Standard":
+        st.image("standard.jpg", caption="Esempio Residenziale Standard")
+    else:
+        st.image("frammentato.jpg", caption="Esempio Spazi Frammentati")
 
 with col2:
     luoghi = st.selectbox("Tipologia Luoghi", ["Al Grezzo", "Arredato", "Ingombrato/Riflessi"])
