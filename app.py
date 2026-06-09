@@ -194,12 +194,25 @@ st.markdown("#### 📅 Scegli Data e Ora")
 # Il nuovo sistema usa un dizionario per definire l'occupazione: "Tutto il giorno", "Mattina", o "Pomeriggio"
 date_occupate = {
     datetime.date(2026, 6, 15): "Mattina",
-    datetime.date(2026, 6, 20): "Pomeriggio",
+    datetime.date(2026, 6, 16): "Pomeriggio",
+    datetime.date(2026, 6, 17): "Tutto il giorno",
+    datetime.date(2026, 6, 18): "Pomeriggio",
+    datetime.date(2026, 6, 19): "Pomeriggio",
     # Giornate bloccate interamente per le vacanze a Canazei di fine giugno
+    datetime.date(2026, 6, 23): "Tutto il giorno",
+    datetime.date(2026, 6, 24): "Tutto il giorno",
+    datetime.date(2026, 6, 25): "Tutto il giorno",
     datetime.date(2026, 6, 26): "Tutto il giorno",
-    datetime.date(2026, 6, 27): "Tutto il giorno",
-    datetime.date(2026, 6, 28): "Tutto il giorno",
-    datetime.date(2026, 6, 29): "Tutto il giorno"
+    datetime.date(2026, 6, 29): "Tutto il giorno",
+    datetime.date(2026, 6, 30): "Tutto il giorno",
+    datetime.date(2026, 7, 1): "Tutto il giorno",
+    datetime.date(2026, 7, 2): "Tutto il giorno",
+    datetime.date(2026, 7, 3): "Tutto il giorno",
+    datetime.date(2026, 7, 6): "Tutto il giorno",
+    datetime.date(2026, 7, 7): "Tutto il giorno",
+    datetime.date(2026, 7, 8): "Tutto il giorno",
+    datetime.date(2026, 7, 9): "Tutto il giorno",
+    datetime.date(2026, 7, 10): "Tutto il giorno"
 }
 
 col_data, col_ora = st.columns(2)
@@ -210,10 +223,16 @@ with col_data:
 with col_ora:
     fascia_oraria = st.selectbox("Fascia oraria:", ["Mattina (09:00 - 12:00)", "Pomeriggio (15:00 - 18:00)"])
 
-# Controllo disponibilità incrociando data e fascia oraria
+# Controllo disponibilità incrociando data, fascia oraria e weekend
 data_disponibile = True
 
-if data_scelta in date_occupate:
+# 1. Controllo automatico Fine Settimana (5 = Sabato, 6 = Domenica)
+if data_scelta.weekday() >= 5: 
+    st.error("❌ I sopralluoghi non vengono effettuati nel fine settimana. Seleziona un giorno dal Lunedì al Venerdì.")
+    data_disponibile = False
+
+# 2. Controllo delle tue date specifiche occupate
+elif data_scelta in date_occupate:
     stato_occupazione = date_occupate[data_scelta]
     
     if stato_occupazione == "Tutto il giorno":
@@ -226,10 +245,9 @@ if data_scelta in date_occupate:
         st.error("❌ Il pomeriggio di questo giorno è già impegnato. Scegli la mattina o un'altra data.")
         data_disponibile = False
     else:
-        # Se è occupata la mattina ma l'utente sceglie il pomeriggio (o viceversa)
         st.success("✅ Orario disponibile per questa data!")
-elif data_scelta.weekday() >= 5: 
-    st.warning("⚠️ Hai selezionato un weekend. La disponibilità dovrà essere confermata.")
+
+# 3. Se non è weekend e non è nelle date occupate, via libera
 else:
     st.success("✅ Data e orario disponibili!")
     
