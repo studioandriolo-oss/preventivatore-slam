@@ -51,4 +51,4 @@ prezzo_calcolato = prezzo_base * totale_moltiplicatori
 
 st.divider()
 st.subheader(f"💶 PREVENTIVO STIMATO: {prezzo_calcolato:,.2f} €")
-st.caption("Iva e cassa escluse. Il calcolo non include eventuali spese di trasferta
+st.caption("Iva e cassa escluse. Il calcolo non include eventuali spese di trasferta")
