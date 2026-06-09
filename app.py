@@ -40,17 +40,16 @@ servizio = st.selectbox("Seleziona il livello di restituzione grafica", [
     "BIM + VISUAL"
 ])
 
-# Assegnazione dei parametri estratti dal tuo listino
+# Assegnazione del moltiplicatore fisso per ogni servizio
 dati_servizi = {
-    "SMART (Rilievo, elaborazione nuvola di punti)": {"min": 1.2, "max": 3},
-    "TECNICO (Smart + planimetrie CAD 2D di alta precisione)": {"min": 3.5, "max": 6},
-    "BIM (Smart + modellazione parametrica intelligente)": {"min": 8, "max": 15},
-    "VISUAL (Smart + Virtual Tour 360° immersivo)": {"min": 3, "max": 4.5},
-    "TECNICO + VISUAL": {"min": 4.5, "max": 7},
-    "BIM + VISUAL": {"min": 9, "max": 16}
+    "SMART (Rilievo, elaborazione nuvola di punti)": 1.2,
+    "TECNICO (Smart + planimetrie CAD 2D di alta precisione)": 3.5,
+    "BIM (Smart + modellazione parametrica intelligente)": 8.0,
+    "VISUAL (Smart + Virtual Tour 360° immersivo)": 3.0,
+    "TECNICO + VISUAL": 4.5,
+    "BIM + VISUAL": 9.0
 }
-molt_servizio_min = dati_servizi[servizio]["min"]
-molt_servizio_max = dati_servizi[servizio]["max"]
+molt_servizio = dati_servizi[servizio]
 
 # SEZIONE 3: Complessità del Rilievo
 st.subheader("3. Complessità del Rilievo")
@@ -71,11 +70,10 @@ with col3:
 # CALCOLO FINALE
 totale_moltiplicatori_complessita = molt_spazi * molt_luoghi * molt_geom
 
-# Calcolo del range (Prezzo Base * Moltiplicatore Servizio * Moltiplicatori Complessità)
-preventivo_minimo = prezzo_base * molt_servizio_min * totale_moltiplicatori_complessita
-preventivo_massimo = prezzo_base * molt_servizio_max * totale_moltiplicatori_complessita
+# Calcolo totale (Prezzo Base * Moltiplicatore Servizio * Moltiplicatori Complessità)
+preventivo_totale = prezzo_base * molt_servizio * totale_moltiplicatori_complessita
 
 st.divider()
 st.subheader("💶 PREVENTIVO STIMATO:")
-st.markdown(f"### Da **{preventivo_minimo:,.2f} €** a **{preventivo_massimo:,.2f} €**")
-st.caption("Iva e cassa escluse. Il calcolo non include eventuali spese di trasferta con partenza da Noventa Vicentina in caso di distanze superiori a 100km.")
+st.markdown(f"### **{preventivo_totale:,.2f} €**")
+st.caption("Iva e cassa escluse. Il calcolo non include eventuali spese di trasferta con partenza dalla sede di Padova.")
