@@ -130,4 +130,5 @@ with res_col1:
 with res_col2:
     st.subheader("⏳ TEMPI DI CONSEGNA")
     st.markdown(f"### **{giorni_stimati} giorni**")
-    st.caption("Iva e cassa escluse. Il calcolo non include eventuali spese di trasferta con partenza da Noventa Vicentina se distanza superiore a 100km.")
+    
+st.caption("Iva e cassa escluse. Il calcolo non include eventuali spese di trasferta con partenza da Noventa Vicentina se distanza superiore a 100km.")
