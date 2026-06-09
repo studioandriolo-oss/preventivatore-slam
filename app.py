@@ -7,7 +7,7 @@ st.set_page_config(page_title="Preventivatore SLAM", page_icon="logo.png", layou
 st.markdown('<style>[data-testid="stImage"] {display: flex; justify-content: center;}</style>', unsafe_allow_html=True)
 st.image("logo.png", width=150)
 st.title("Calcolatore Rilievi 3D")
-st.write("Generatore rapido di preventivi per rilievi architettonici con tecnologia SLAM.")
+st.write("Generatore rapido preventivi per scansioni architettoniche con tecnologia SLAM.")
 st.divider()
 
 # SEZIONE 1: Superficie e Prezzo Base
