@@ -156,8 +156,6 @@ matrice_tempi = {
 giorni_base = matrice_tempi[servizio][spazi]
 giorni_stimati = int((giorni_base * molt_superficie_tempo) + 0.99)
 
-st.divider()
-
 # --- BOX RISULTATI IMPAGINATO ---
 res_col1, res_col2 = st.columns(2)
 
