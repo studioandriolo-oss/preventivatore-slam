@@ -138,12 +138,24 @@ st.subheader("📍 Richiedi un Sopralluogo")
 st.write("Inserisci i dati dell'immobile e i tuoi recapiti per inviarci la richiesta direttamente.")
 
 # Campi di input per raccogliere i dati del cliente
-indirizzo = st.text_input("Indirizzo esatto dell'immobile da rilevare (Via, Civico, Città):")
-nome_cliente = st.text_input("Il tuo Nome o Ragione Sociale:")
+indirizzo = st.text_input("Indirizzo esatto dell'immobile da rilevare (Via, Civico, CAP, Città, Provincia):")
+nome_cliente = st.text_input("Il tuo Nome e Cognome:")
 contatto_cliente = st.text_input("Il tuo Telefono o Email per essere ricontattato:")
 
+# --- INIZIO BLOCCO CAPTCHA ---
+import random
+
+if 'captcha_a' not in st.session_state:
+    st.session_state.captcha_a = random.randint(1, 9)
+    st.session_state.captcha_b = random.randint(1, 9)
+
+st.write(f"🤖 **Controllo Anti-Spam: quanto fa {st.session_state.captcha_a} + {st.session_state.captcha_b}?**")
+risposta_captcha = st.text_input("Inserisci il risultato numerico per sbloccare l'invio:")
+somma_corretta = str(st.session_state.captcha_a + st.session_state.captcha_b)
+# --- FINE BLOCCO CAPTCHA ---
+
 # Il pulsante appare solo se l'utente ha compilato tutti e 3 i campi
-if indirizzo and nome_cliente and contatto_cliente:
+if indirizzo and nome_cliente and contatto_cliente and risposta_captcha == somma_corretta:
     if st.button("✉️ Invia Richiesta Sopralluogo", type="primary"):
         
         # Testo dell'email
@@ -183,6 +195,9 @@ RIEPILOGO PARAMETRI:
             server.quit()
 
             st.success("✅ Richiesta inviata con successo! Ti ricontatteremo al più presto.")
+            # Rimescola i numeri del captcha
+            st.session_state.captcha_a = random.randint(1, 9)
+            st.session_state.captcha_b = random.randint(1, 9)
         except Exception as e:
             st.error("⚠️ Si è verificato un errore nell'invio. Verifica che la password nei Secrets di Streamlit sia corretta.")
 else:
