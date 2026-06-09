@@ -77,6 +77,13 @@ with col3:
     geometria = st.selectbox("Geometria", ["Ortogonale", "Storico / Irregolare"])
     molt_geom = 1.0 if geometria == "Ortogonale" else 1.4
 
+# --- IMMAGINE DINAMICA CHE CAMBIA 2 ---
+    if geometria == "Ortogonale":
+        st.image("ortogonale.jpg", caption="Esempio edificio ortogonale")
+    else:
+        st.image("irregolare.jpg", caption="Esempio Spazi Storico / Irregolare")
+
+
 # CALCOLO FINALE
 totale_moltiplicatori_complessita = molt_spazi * molt_luoghi * molt_geom
 
