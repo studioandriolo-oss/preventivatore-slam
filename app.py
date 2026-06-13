@@ -264,7 +264,7 @@ with res_col1:
     telefono_cliente = st.text_input("Il tuo Telefono per essere ricontattato:")
     
 with res_col2:
-    e-mail_cliente = st.text_input("La tua Email:")
+    e-mail_cliente == st.text_input("La tua Email:")
 
 # --- 3. CAPTCHA ANTI-ROBOT ---
 if 'captcha_a' not in st.session_state:
