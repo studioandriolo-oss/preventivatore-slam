@@ -263,7 +263,7 @@ col_tel, col_mail = st.columns(2)
 with col_tel:
     telefono_cliente = st.text_input("Il tuo Telefono per essere ricontattato:")
 with col_mail:
-    e-mail_cliente = st.text_input("La tua Email:")
+    email_cliente = st.text_input("La tua Email:")
 
 # --- 3. CAPTCHA ANTI-ROBOT ---
 if 'captcha_a' not in st.session_state:
@@ -284,7 +284,7 @@ if indirizzo and nome_cliente and contatto_cliente and risposta_captcha == somma
 DATI CLIENTE:
 - Nome/Azienda: {nome_cliente}
 - Codice fiscale: {codice_fiscale}
-- Recapiti: {telefono_cliente}  {e-mail_cliente}
+- Recapiti: {telefono_cliente} | {email_cliente}
 
 APPUNTAMENTO RICHIESTO:
 - Data: {data_scelta.strftime('%d/%m/%Y')}
