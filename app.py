@@ -258,7 +258,13 @@ st.caption("Data e orario saranno confermate dopo l'invio della richiesta.")
 st.markdown("#### 👤 I tuoi dati")
 indirizzo = st.text_input("Indirizzo esatto dell'immobile da rilevare (Via, Civico, CAP, Città, Provincia):")
 nome_cliente = st.text_input("Il tuo Nome e Cognome:")
-contatto_cliente = st.text_input("Il tuo Telefono o Email per essere ricontattato:")
+codice_fiscale = st.text_input("Il tuo codice fiscale:")
+res_col1, res_col2 = st.columns(2)
+with res_col1:
+    telefono_cliente = st.text_input("Il tuo Telefono per essere ricontattato:")
+    
+with res_col2:
+    e-mail_cliente = st.text_input("La tua Email:")
 
 # --- 3. CAPTCHA ANTI-ROBOT ---
 if 'captcha_a' not in st.session_state:
@@ -278,7 +284,8 @@ if indirizzo and nome_cliente and contatto_cliente and risposta_captcha == somma
 
 DATI CLIENTE:
 - Nome/Azienda: {nome_cliente}
-- Recapito: {contatto_cliente}
+- Codice fiscale: {codice_fiscale}
+- Recapiti: {telefono_cliente}  {e-mail_cliente}
 
 APPUNTAMENTO RICHIESTO:
 - Data: {data_scelta.strftime('%d/%m/%Y')}
@@ -290,7 +297,7 @@ RIEPILOGO PARAMETRI:
 - Tipologia Servizio: {servizio}
 - Complessità: Spazi {spazi}, Luoghi {luoghi}, Geometria {geometria}
 
-- STIMA PREZZO: {preventivo_totale:,.2f} Euro
+- STIMA PREZZO: {prezzo_finito:,.2f} Euro
 - TEMPI STIMATI: {giorni_stimati} giorni
 """
         try:
