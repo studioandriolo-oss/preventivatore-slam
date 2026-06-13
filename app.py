@@ -259,12 +259,11 @@ st.markdown("#### 👤 I tuoi dati")
 indirizzo = st.text_input("Indirizzo esatto dell'immobile da rilevare (Via, Civico, CAP, Città, Provincia):")
 nome_cliente = st.text_input("Il tuo Nome e Cognome:")
 codice_fiscale = st.text_input("Il tuo codice fiscale:")
-res_col1, res_col2 = st.columns(2)
-with res_col1:
+col_tel, col_mail = st.columns(2)
+with col_tel:
     telefono_cliente = st.text_input("Il tuo Telefono per essere ricontattato:")
-    
-with res_col2:
-    e-mail_cliente == st.text_input("La tua Email:")
+with col_mail:
+    e-mail_cliente = st.text_input("La tua Email:")
 
 # --- 3. CAPTCHA ANTI-ROBOT ---
 if 'captcha_a' not in st.session_state:
