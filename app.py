@@ -278,7 +278,7 @@ somma_corretta = str(st.session_state.captcha_a + st.session_state.captcha_b)
 if indirizzo and nome_cliente and telefono_cliente and email_cliente and risposta_captcha == somma_corretta and data_disponibile:
     if st.button("✉️ Invia Richiesta Sopralluogo", type="primary"):
         
-        oggetto = f"Nuova Richiesta Sopralluogo - {nome_cliente}"
+        oggetto = f"Nuova Richiesta Sopralluogo"
         corpo_email = f"""È stata generata una nuova richiesta di sopralluogo dal calcolatore web.
 
 DATI CLIENTE:
