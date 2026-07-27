@@ -1,4 +1,5 @@
 import streamlit as st
+import random
 
 # Impostazioni grafiche della pagina
 st.set_page_config(page_title="Preventivatore SLAM", page_icon="logo.png", layout="centered")
@@ -46,8 +47,8 @@ servizio = st.selectbox("Seleziona il livello di restituzione grafica", [
 # Assegnazione del moltiplicatore fisso per ogni servizio
 dati_servizi = {
     "SMART (Rilievo, elaborazione nuvola di punti)": 1.0,
-    "TECNICO (Smart + planimetrie CAD 2D di alta precisione)": 2,
-    "BIM (Smart + modellazione parametrica intelligente)": 3,
+    "TECNICO (Smart + planimetrie CAD 2D)": 2,
+    "BIM (Smart + modellazione parametrica)": 3,
     "VISUAL (Smart + Virtual Tour 360° immersivo)": 1.5,
     "TECNICO + VISUAL": 2.5,
     "BIM + VISUAL": 3.5
@@ -71,7 +72,7 @@ with col1:
         st.image("frammentato.jpg", caption="Esempio Spazi Frammentati")
 
 with col2:
-    luoghi = st.selectbox("Tipologia Luoghi", ["Al Grezzo", "Arredato", "Ingombrato/Riflessi"])
+    luoghi = st.selectbox("Tipologia Luoghi", ["Al Grezzo", "Arredato", "Ingombrato/Tanti Riflessi"])
     molt_luoghi = 1.0 if luoghi == "Al Grezzo" else (1.1 if luoghi == "Arredato" else 1.25)
 
 # --- IMMAGINE DINAMICA CHE CAMBIA LUOGHI ---
@@ -92,16 +93,9 @@ with col3:
     else:
         st.image("irregolare.jpg", caption="Esempio Spazi Storico / Irregolare")
 
-# CALCOLO FINALE
-totale_moltiplicatori_complessita = molt_spazi * molt_luoghi * molt_geom
-
-# Calcolo totale (Prezzo Base * Moltiplicatore Servizio * Moltiplicatori Complessità)
-preventivo_totale = prezzo_base * molt_servizio * totale_moltiplicatori_complessita
-
 st.divider()
 
 # --- MOTORE CALCOLO TEMPI DI CONSEGNA ---
-# Calcolo moltiplicatore tempo in base alla superficie
 if superficie <= 499:
     molt_superficie_tempo = 1.0
 elif superficie <= 999:
@@ -113,7 +107,6 @@ elif superficie <= 4999:
 else:
     molt_superficie_tempo = 3.0
 
-# Matrice: [Riga Servizio] incrocia [Colonna Spazi]
 matrice_tempi = {
     "SMART (Rilievo, elaborazione nuvola di punti)": {"Open Space": 3, "Standard": 3, "Frammentato": 3},
     "TECNICO (Smart + planimetrie CAD 2D di alta precisione)": {"Open Space": 5, "Standard": 7, "Frammentato": 7},
@@ -123,7 +116,6 @@ matrice_tempi = {
     "BIM + VISUAL": {"Open Space": 8, "Standard": 13, "Frammentato": 18}
 }
 
-# Estrapolazione giorni base e calcolo finale arrotondato per eccesso
 giorni_base = matrice_tempi[servizio][spazi]
 giorni_stimati = int((giorni_base * molt_superficie_tempo) + 0.99)
 
@@ -138,31 +130,6 @@ cassa = imponibile * 0.04  # Cassa al 4%
 subtotale = imponibile + cassa
 iva = subtotale * 0.22     # Iva al 22% calcolata su Imponibile + Cassa
 prezzo_finito = subtotale + iva
-
-# --- MOTORE CALCOLO TEMPI DI CONSEGNA ---
-# Calcolo moltiplicatore tempo in base alla superficie
-if superficie <= 499:
-    molt_superficie_tempo = 1.0
-elif superficie <= 999:
-    molt_superficie_tempo = 1.5
-elif superficie <= 2999:
-    molt_superficie_tempo = 2.0
-elif superficie <= 4999:
-    molt_superficie_tempo = 2.5
-else:
-    molt_superficie_tempo = 3.0
-
-matrice_tempi = {
-    "SMART (Rilievo, elaborazione nuvola di punti)": {"Open Space": 3, "Standard": 3, "Frammentato": 3},
-    "TECNICO (Smart + planimetrie CAD 2D di alta precisione)": {"Open Space": 5, "Standard": 7, "Frammentato": 7},
-    "BIM (Smart + modellazione parametrica intelligente)": {"Open Space": 5, "Standard": 10, "Frammentato": 15},
-    "VISUAL (Smart + Virtual Tour 360° immersivo)": {"Open Space": 5, "Standard": 5, "Frammentato": 5},
-    "TECNICO + VISUAL": {"Open Space": 7, "Standard": 9, "Frammentato": 9},
-    "BIM + VISUAL": {"Open Space": 8, "Standard": 13, "Frammentato": 18}
-}
-
-giorni_base = matrice_tempi[servizio][spazi]
-giorni_stimati = int((giorni_base * molt_superficie_tempo) + 0.99)
 
 # --- BOX RISULTATI IMPAGINATO ---
 res_col1, res_col2 = st.columns(2)
@@ -180,26 +147,22 @@ st.caption(f"Imponibile: {imponibile:,.2f} € | Cassa (4%): {cassa:,.2f} € | 
 # Nota
 st.caption("Il calcolo non include eventuali spese di trasferta con partenza da Noventa Vicentina se distanza superiore a 100km.")
 
-# --- SEZIONE RICHIESTA SOPRALLUOGO (CON CALENDARIO E CAPTCHA) ---
+# --- SEZIONE INVIO RICHIESTA ---
 st.divider()
-st.subheader("📍 Richiedi un Sopralluogo")
-st.write("Scegli una data, inserisci i dati dell'immobile e lasciaci i tuoi recapiti.")
+st.subheader("📍 Richiedi Sopralluogo")
+st.write("Inserisci i dati dell'immobile e i tuoi recapiti per inviare la richiesta all'architetto.")
 
-import random
-import datetime
-
-# --- 2. DATI CLIENTE ---
-st.markdown("#### 👤 I tuoi dati")
+# --- 1. DATI CLIENTE ---
 indirizzo = st.text_input("Indirizzo esatto dell'immobile da rilevare (Via, Civico, CAP, Città, Provincia):")
-nome_cliente = st.text_input("Il tuo Nome e Cognome:")
-codice_fiscale = st.text_input("Il tuo codice fiscale:")
+nome_cliente = st.text_input("Il tuo Nome e Cognome / Azienda:")
+codice_fiscale = st.text_input("Il tuo Codice Fiscale / P.IVA:")
 col_tel, col_mail = st.columns(2)
 with col_tel:
     telefono_cliente = st.text_input("Il tuo Telefono per essere ricontattato:")
 with col_mail:
     email_cliente = st.text_input("La tua Email:")
 
-# --- 3. CAPTCHA ANTI-ROBOT ---
+# --- 2. CAPTCHA ANTI-ROBOT ---
 if 'captcha_a' not in st.session_state:
     st.session_state.captcha_a = random.randint(1, 9)
     st.session_state.captcha_b = random.randint(1, 9)
@@ -208,30 +171,27 @@ st.write(f"🤖 **Controllo Anti-Spam: quanto fa {st.session_state.captcha_a} + 
 risposta_captcha = st.text_input("Inserisci il risultato numerico per sbloccare l'invio:")
 somma_corretta = str(st.session_state.captcha_a + st.session_state.captcha_b)
 
-# --- 4. MOTORE DI INVIO EMAIL ---
-if indirizzo and nome_cliente and telefono_cliente and email_cliente and risposta_captcha == somma_corretta and data_disponibile:
-    if st.button("✉️ Invia Richiesta Sopralluogo", type="primary"):
+# --- 3. MOTORE DI INVIO EMAIL ---
+if indirizzo and nome_cliente and telefono_cliente and email_cliente and risposta_captcha == somma_corretta:
+    if st.button("✉️ Invia Richiesta all'Architetto", type="primary"):
         
-        oggetto = f"Nuova Richiesta Sopralluogo"
-        corpo_email = f"""È stata generata una nuova richiesta di sopralluogo dal calcolatore web.
+        oggetto = f"Nuova Richiesta Sopralluogo - {nome_cliente}"
+        corpo_email = f"""È stata generata una nuova richiesta di preventivo/sopralluogo dal calcolatore web.
 
 DATI CLIENTE:
 - Nome/Azienda: {nome_cliente}
-- Codice fiscale: {codice_fiscale}
+- CF/P.IVA: {codice_fiscale}
 - Recapiti: {telefono_cliente} | {email_cliente}
-
-APPUNTAMENTO RICHIESTO:
-- Data: {data_scelta.strftime('%d/%m/%Y')}
-- Orario: {fascia_oraria}
-- Indirizzo: {indirizzo}
+- Indirizzo Immobile: {indirizzo}
 
 RIEPILOGO PARAMETRI:
 - Superficie: {superficie} mq
 - Tipologia Servizio: {servizio}
 - Complessità: Spazi {spazi}, Luoghi {luoghi}, Geometria {geometria}
 
-- STIMA PREZZO: {prezzo_finito:,.2f} Euro
-- TEMPI STIMATI: {giorni_stimati} giorni
+STIMA CALCOLATA:
+- Prezzo Finito: {prezzo_finito:,.2f} Euro
+- Tempi Stimati: {giorni_stimati} giorni
 """
         try:
             import smtplib
@@ -247,8 +207,9 @@ RIEPILOGO PARAMETRI:
             server.send_message(msg)
             server.quit()
 
-            st.success("✅ Richiesta inviata con successo! Ti ricontatteremo al più presto per confermare l'appuntamento.")
+            st.success("✅ Richiesta inviata con successo! Ti ricontatteremo al più presto.")
             
+            # Rigenera i numeri del captcha dopo l'invio
             st.session_state.captcha_a = random.randint(1, 9)
             st.session_state.captcha_b = random.randint(1, 9)
             
@@ -256,6 +217,5 @@ RIEPILOGO PARAMETRI:
             st.error("⚠️ Si è verificato un errore nell'invio. Riprova più tardi.")
 elif risposta_captcha != "" and risposta_captcha != somma_corretta:
     st.error("❌ Risultato matematico errato. Riprova.")
-    pass 
 else:
-    st.info("👆 Scegli una data disponibile, compila tutti i dati e risolvi il calcolo per inviare la richiesta.")
+    st.info("👆 Compila tutti i campi richiesti e risolvi il calcolo per inviare la richiesta.")
