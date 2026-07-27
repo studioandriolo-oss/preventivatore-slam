@@ -13,6 +13,7 @@ st.divider()
 
 # SEZIONE 1: Superficie e Prezzo Base
 st.subheader("1. Dimensioni Immobile")
+luogo = st.text_input("Indirizzo e città dove effettuare il rilievo") 
 superficie = st.number_input("Inserisci la Superficie (mq)", min_value=1, value=150, step=10)
 
 # Motore di calcolo scaglioni
@@ -185,6 +186,7 @@ DATI CLIENTE:
 - Indirizzo Immobile: {indirizzo}
 
 RIEPILOGO PARAMETRI:
+- Luogo: {luogo}
 - Superficie: {superficie} mq
 - Tipologia Servizio: {servizio}
 - Complessità: Spazi {spazi}, Luoghi {luoghi}, Geometria {geometria}
