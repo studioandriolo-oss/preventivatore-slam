@@ -173,6 +173,8 @@ risposta_captcha = st.text_input("Inserisci il risultato numerico per sbloccare 
 somma_corretta = str(st.session_state.captcha_a + st.session_state.captcha_b)
 
 # --- 3. MOTORE DI INVIO EMAIL ---
+privacy_accettata = st.checkbox("Accetto il trattamento dei dati personali per la gestione della richiesta di preventivo.")
+
 if indirizzo and nome_cliente and telefono_cliente and email_cliente and risposta_captcha == somma_corretta:
     if st.button("✉️ Invia Richiesta all'Architetto", type="primary"):
         
@@ -203,6 +205,7 @@ STIMA CALCOLATA:
             msg['Subject'] = oggetto
             msg['From'] = "studioandriolo@gmail.com"
             msg['To'] = "studioandriolo@gmail.com"
+            msg['Reply-To'] = email_cliente
 
             server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
             server.login("studioandriolo@gmail.com", st.secrets["GMAIL_PASSWORD"])
@@ -220,4 +223,4 @@ STIMA CALCOLATA:
 elif risposta_captcha != "" and risposta_captcha != somma_corretta:
     st.error("❌ Risultato matematico errato. Riprova.")
 else:
-    st.info("👆 Compila tutti i campi richiesti e risolvi il calcolo per inviare la richiesta.")
+    st.info("👆 Compila tutti i campi richiesti, accetta la privacy e risolvi il calcolo per inviare la richiesta.")
