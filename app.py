@@ -37,8 +37,8 @@ st.info(f"Quota Base per {superficie} mq: **{prezzo_base} €**")
 st.subheader("2. Tipologia Servizio")
 servizio = st.selectbox("Seleziona il livello di restituzione grafica", [
     "SMART (Rilievo, elaborazione nuvola di punti)",
-    "TECNICO (Smart + planimetrie CAD 2D di alta precisione)",
-    "BIM (Smart + modellazione parametrica intelligente)",
+    "TECNICO (Smart + planimetrie CAD 2D)",
+    "BIM (Smart + modellazione parametrica)",
     "VISUAL (Smart + Virtual Tour 360° immersivo)",
     "TECNICO + VISUAL",
     "BIM + VISUAL"
