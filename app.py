@@ -256,7 +256,6 @@ RIEPILOGO PARAMETRI:
             st.error("⚠️ Si è verificato un errore nell'invio. Riprova più tardi.")
 elif risposta_captcha != "" and risposta_captcha != somma_corretta:
     st.error("❌ Risultato matematico errato. Riprova.")
-elif not data_disponibile:
     pass 
 else:
     st.info("👆 Scegli una data disponibile, compila tutti i dati e risolvi il calcolo per inviare la richiesta.")
