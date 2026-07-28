@@ -110,8 +110,8 @@ else:
 
 matrice_tempi = {
     "SMART (Rilievo, elaborazione nuvola di punti)": {"Open Space": 3, "Standard": 3, "Frammentato": 3},
-    "TECNICO (Smart + planimetrie CAD 2D di alta precisione)": {"Open Space": 5, "Standard": 7, "Frammentato": 7},
-    "BIM (Smart + modellazione parametrica intelligente)": {"Open Space": 5, "Standard": 10, "Frammentato": 15},
+    "TECNICO (Smart + planimetrie CAD 2D)": {"Open Space": 5, "Standard": 7, "Frammentato": 7},
+    "BIM (Smart + modellazione parametrica)": {"Open Space": 5, "Standard": 10, "Frammentato": 15},
     "VISUAL (Smart + Virtual Tour 360° immersivo)": {"Open Space": 5, "Standard": 5, "Frammentato": 5},
     "TECNICO + VISUAL": {"Open Space": 7, "Standard": 9, "Frammentato": 9},
     "BIM + VISUAL": {"Open Space": 8, "Standard": 13, "Frammentato": 18}
