@@ -162,6 +162,7 @@ with col_tel:
     telefono_cliente = st.text_input("Il tuo Telefono per essere ricontattato:")
 with col_mail:
     email_cliente = st.text_input("La tua Email:")
+note = st.text_input("Note")
 
 # --- 2. CAPTCHA ANTI-ROBOT ---
 if 'captcha_a' not in st.session_state:
@@ -186,6 +187,7 @@ DATI CLIENTE:
 - CF/P.IVA: {codice_fiscale}
 - Recapiti: {telefono_cliente} | {email_cliente}
 - Indirizzo Immobile: {indirizzo}
+- Note: {note}
 
 RIEPILOGO PARAMETRI:
 - Luogo: {luogo}
